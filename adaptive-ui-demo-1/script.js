@@ -122,6 +122,9 @@ async function loadWikipediaSummary(url) {
   if (!title) {
     throw new Error("Please enter a valid Wikipedia article URL.");
   }
+}
+
+reconfigureBtn.addEventListener("click", buildOutput);
 
   const endpoint = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
   const response = await fetch(endpoint);
