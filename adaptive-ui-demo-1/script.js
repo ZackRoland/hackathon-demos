@@ -204,6 +204,57 @@ async function loadFromInputUrl() {
     loadStatus.textContent = "Enter a page URL first (Wikipedia URL recommended).";
     return;
   }
+}
+
+reconfigureBtn.addEventListener("click", buildOutput);
+
+  const endpoint = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+  const response = await fetch(endpoint);
+  if (!response.ok) {
+    throw new Error("Wikipedia page could not be loaded.");
+  }
+
+  const data = await response.json();
+  const extract = data.extract || "No summary extract found.";
+
+  loadedPageLabel = data.title || title;
+  sourceText = extract;
+  renderSource(loadedPageLabel, extract, "Loaded from Wikipedia REST API.");
+}
+
+async function loadFromInputUrl() {
+  const url = pageUrlInput.value.trim();
+  if (!url) {
+    loadStatus.textContent = "Enter a page URL first (Wikipedia URL recommended).";
+    return;
+  }
+
+  loadStatus.textContent = "Loading page content...";
+
+  try {
+    await loadWikipediaSummary(url);
+    loadStatus.textContent = `Loaded ${loadedPageLabel}. Click Reconfigure This Page.`;
+    buildOutput();
+  } catch (error) {
+    loadStatus.textContent = error.message;
+  }
+}
+
+loadPageBtn.addEventListener("click", loadFromInputUrl);
+
+loadSampleBtn.addEventListener("click", async () => {
+  pageUrlInput.value = WIKI_SAMPLE_URL;
+  await loadFromInputUrl();
+});
+
+pageUrlInput.addEventListener("keydown", async event => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    await loadFromInputUrl();
+  }
+});
+
+reconfigureBtn.addEventListener("click", buildOutput);
 
   const start = performance.now();
   setLoadingState(true);
