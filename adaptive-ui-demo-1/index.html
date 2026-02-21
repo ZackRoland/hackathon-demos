@@ -3,29 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adaptive UI Demo</title>
+  <title>Page Lens Extension Demo</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
   <header>
-    <h1>Adaptive Dashboard</h1>
-    <label class="toggle">
-      <input type="checkbox" id="aiToggle" />
-      <span>Enable Adaptive AI</span>
-    </label>
+    <div>
+      <h1>Page Lens</h1>
+      <p>Prototype of an extension that reconfigures pages into the summary style users want.</p>
+    </div>
+    <span class="badge">Extension Simulation</span>
   </header>
 
-  <div id="dashboard">
-    <div class="card" data-id="analytics">📊 Analytics</div>
-    <div class="card" data-id="reports">📁 Reports</div>
-    <div class="card" data-id="profile">👤 Profile</div>
-    <div class="card" data-id="settings">⚙️ Settings</div>
-    <div class="card" data-id="notifications">🔔 Notifications</div>
-    <div class="card" data-id="help">❓ Help</div>
-  </div>
+  <main class="layout">
+    <section class="panel controls" aria-labelledby="controlsTitle">
+      <h2 id="controlsTitle">Summary Settings</h2>
 
-  <div id="status">AI Mode: OFF</div>
+      <label>
+        Page URL (Wikipedia works best)
+        <input id="pageUrlInput" type="url" value="https://en.wikipedia.org/wiki/Artificial_intelligence" />
+      </label>
+
+      <div class="control-row">
+        <div class="button-row">
+          <button id="loadPageBtn" type="button" class="secondary">Load URL</button>
+          <button id="loadSampleBtn" type="button" class="secondary">Load Sample Wiki</button>
+        </div>
+        <span id="loadStatus">Ready. Paste a URL or click “Load Sample Wiki”.</span>
+      </div>
+
+      <label>
+        Output format
+        <select id="formatSelect">
+          <option value="brief">Brief bullets</option>
+          <option value="checklist">Action checklist</option>
+          <option value="timeline">Timeline view</option>
+        </select>
+      </label>
+
+      <label>
+        Audience
+        <select id="audienceSelect">
+          <option value="founder">Founder</option>
+          <option value="engineer" selected>Engineer</option>
+          <option value="investor">Investor</option>
+        </select>
+      </label>
+
+      <label>
+        Emphasis
+        <select id="emphasisSelect">
+          <option value="opportunities">Opportunities</option>
+          <option value="risks" selected>Risks</option>
+          <option value="decisions">Decisions needed</option>
+        </select>
+      </label>
+
+      <label>
+        Max points
+        <input id="pointsRange" type="range" min="3" max="8" value="5" />
+        <span id="pointsValue">5 points</span>
+      </label>
+
+      <button id="reconfigureBtn" type="button">Reconfigure This Page</button>
+    </section>
+
+    <section class="panel source" aria-labelledby="sourceTitle">
+      <h2 id="sourceTitle">Loaded Page Content</h2>
+      <article id="sourceContent">
+        <h3>Waiting for URL load</h3>
+        <p>Use the controls to load a Wikipedia page and generate a reconfigured view.</p>
+      </article>
+    </section>
+
+    <section class="panel output" aria-labelledby="outputTitle">
+      <h2 id="outputTitle">Reconfigured View</h2>
+      <div id="outputMeta">No configuration applied yet.</div>
+      <ul id="outputList"></ul>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
