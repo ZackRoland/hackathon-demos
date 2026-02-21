@@ -41,7 +41,7 @@ header p {
 
 .layout {
   display: grid;
-  grid-template-columns: 320px 1fr 1fr;
+  grid-template-columns: 300px 1fr 1fr;
   gap: 16px;
 }
 
@@ -72,7 +72,7 @@ header p {
 }
 
 select,
-input,
+input[type="range"],
 button {
   border: 1px solid #334155;
   background: #111827;
@@ -81,32 +81,12 @@ button {
   border-radius: 8px;
 }
 
-input::placeholder {
-  color: #64748b;
-}
-
-.control-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-#loadStatus {
-  color: #93c5fd;
-  font-size: 0.8rem;
-}
-
 button {
   cursor: pointer;
   margin-top: 4px;
   font-weight: 600;
   background: linear-gradient(120deg, #2563eb, #1d4ed8);
   border: none;
-}
-
-button.secondary {
-  background: #1f2937;
-  border: 1px solid #334155;
 }
 
 button:hover {

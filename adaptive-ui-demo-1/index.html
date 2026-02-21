@@ -10,7 +10,7 @@
   <header>
     <div>
       <h1>Page Lens</h1>
-      <p>Prototype of an extension that reconfigures pages into the summary style users want.</p>
+      <p>Prototype of an extension that reconfigures any page into the summary style users want.</p>
     </div>
     <span class="badge">Extension Simulation</span>
   </header>
@@ -18,16 +18,6 @@
   <main class="layout">
     <section class="panel controls" aria-labelledby="controlsTitle">
       <h2 id="controlsTitle">Summary Settings</h2>
-
-      <label>
-        Page URL (Wikipedia works best)
-        <input id="pageUrlInput" type="url" placeholder="https://en.wikipedia.org/wiki/Artificial_intelligence" />
-      </label>
-
-      <div class="control-row">
-        <button id="loadPageBtn" type="button" class="secondary">Load Page</button>
-        <span id="loadStatus">Using default sample content.</span>
-      </div>
 
       <label>
         Output format
@@ -66,7 +56,7 @@
     </section>
 
     <section class="panel source" aria-labelledby="sourceTitle">
-      <h2 id="sourceTitle">Loaded Page Content</h2>
+      <h2 id="sourceTitle">Example Source Page</h2>
       <article id="sourceContent">
         <h3>Hackathon Project Notes</h3>
         <p>
