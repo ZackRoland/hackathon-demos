@@ -18,6 +18,8 @@ const outputList = document.getElementById("outputList");
 let loadedPageLabel = "Not loaded yet";
 let sourceText = "";
 
+const wikiCache = new Map();
+
 const focusKeywords = {
   opportunities: ["value", "improve", "reduce", "assist", "opportunity", "clear", "quality", "users"],
   risks: ["risk", "concern", "privacy", "weak", "inaccurate", "overload", "block", "failure"],
@@ -117,10 +119,90 @@ function parseWikipediaTitle(url) {
   return decodeURIComponent(match[1].replaceAll("_", " "));
 }
 
+async function fetchWithTimeout(url, timeoutMs = 5000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchWikipediaData(title) {
+  const cacheKey = title.toLowerCase();
+  if (wikiCache.has(cacheKey)) {
+    return wikiCache.get(cacheKey);
+  }
+
+  const summaryEndpoint = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+
+  try {
+    const response = await fetchWithTimeout(summaryEndpoint, 5000);
+    if (!response.ok) {
+      throw new Error("Summary API not available");
+    }
+
+    const data = await response.json();
+    const parsed = {
+      title: data.title || title,
+      extract: data.extract || "No summary extract found.",
+      source: "Wikipedia REST summary"
+    };
+
+    wikiCache.set(cacheKey, parsed);
+    return parsed;
+  } catch {
+    const fallbackEndpoint = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&redirects=1&format=json&origin=*&titles=${encodeURIComponent(title)}`;
+    const fallbackResponse = await fetchWithTimeout(fallbackEndpoint, 7000);
+
+    if (!fallbackResponse.ok) {
+      throw new Error("Wikipedia could not be loaded right now.");
+    }
+
+    const fallbackData = await fallbackResponse.json();
+    const pages = fallbackData?.query?.pages || {};
+    const firstPage = Object.values(pages)[0];
+
+    if (!firstPage || !firstPage.extract) {
+      throw new Error("Wikipedia article text was not available.");
+    }
+
+    const parsed = {
+      title: firstPage.title || title,
+      extract: firstPage.extract,
+      source: "Wikipedia API fallback"
+    };
+
+    wikiCache.set(cacheKey, parsed);
+    return parsed;
+  }
+}
+
 async function loadWikipediaSummary(url) {
   const title = parseWikipediaTitle(url);
   if (!title) {
     throw new Error("Please enter a valid Wikipedia article URL.");
+  }
+
+  const data = await fetchWikipediaData(title);
+  loadedPageLabel = data.title;
+  sourceText = data.extract;
+  renderSource(loadedPageLabel, sourceText, `Loaded from ${data.source}.`);
+}
+
+function setLoadingState(isLoading) {
+  loadPageBtn.disabled = isLoading;
+  loadSampleBtn.disabled = isLoading;
+  reconfigureBtn.disabled = isLoading;
+}
+
+async function loadFromInputUrl() {
+  const url = pageUrlInput.value.trim();
+  if (!url) {
+    loadStatus.textContent = "Enter a page URL first (Wikipedia URL recommended).";
+    return;
   }
 }
 
@@ -155,6 +237,38 @@ async function loadFromInputUrl() {
     buildOutput();
   } catch (error) {
     loadStatus.textContent = error.message;
+  }
+}
+
+loadPageBtn.addEventListener("click", loadFromInputUrl);
+
+loadSampleBtn.addEventListener("click", async () => {
+  pageUrlInput.value = WIKI_SAMPLE_URL;
+  await loadFromInputUrl();
+});
+
+pageUrlInput.addEventListener("keydown", async event => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    await loadFromInputUrl();
+  }
+});
+
+reconfigureBtn.addEventListener("click", buildOutput);
+
+  const start = performance.now();
+  setLoadingState(true);
+  loadStatus.textContent = "Loading page content...";
+
+  try {
+    await loadWikipediaSummary(url);
+    const elapsed = ((performance.now() - start) / 1000).toFixed(1);
+    loadStatus.textContent = `Loaded ${loadedPageLabel} in ${elapsed}s. Click Reconfigure This Page.`;
+    buildOutput();
+  } catch (error) {
+    loadStatus.textContent = `${error.message} Try Load Sample Wiki or retry.`;
+  } finally {
+    setLoadingState(false);
   }
 }
 
