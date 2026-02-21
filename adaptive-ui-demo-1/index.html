@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adaptive UI Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Adaptive Dashboard</h1>
+    <label class="toggle">
+      <input type="checkbox" id="aiToggle" />
+      <span>Enable Adaptive AI</span>
+    </label>
+  </header>
+
+  <div id="dashboard">
+    <div class="card" data-id="analytics">📊 Analytics</div>
+    <div class="card" data-id="reports">📁 Reports</div>
+    <div class="card" data-id="profile">👤 Profile</div>
+    <div class="card" data-id="settings">⚙️ Settings</div>
+    <div class="card" data-id="notifications">🔔 Notifications</div>
+    <div class="card" data-id="help">❓ Help</div>
+  </div>
+
+  <div id="status">AI Mode: OFF</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
