@@ -10,7 +10,7 @@
   <header>
     <div>
       <h1>Page Lens</h1>
-      <p>Prototype of an extension that reconfigures any page into the summary style users want.</p>
+      <p>Prototype of an extension that reconfigures pages into the summary style users want.</p>
     </div>
     <span class="badge">Extension Simulation</span>
   </header>
@@ -18,6 +18,19 @@
   <main class="layout">
     <section class="panel controls" aria-labelledby="controlsTitle">
       <h2 id="controlsTitle">Summary Settings</h2>
+
+      <label>
+        Page URL (Wikipedia works best)
+        <input id="pageUrlInput" type="url" value="https://en.wikipedia.org/wiki/Artificial_intelligence" />
+      </label>
+
+      <div class="control-row">
+        <div class="button-row">
+          <button id="loadPageBtn" type="button" class="secondary">Load URL</button>
+          <button id="loadSampleBtn" type="button" class="secondary">Load Sample Wiki</button>
+        </div>
+        <span id="loadStatus">Ready. Paste a URL or click “Load Sample Wiki”.</span>
+      </div>
 
       <label>
         Output format
@@ -32,7 +45,7 @@
         Audience
         <select id="audienceSelect">
           <option value="founder">Founder</option>
-          <option value="engineer">Engineer</option>
+          <option value="engineer" selected>Engineer</option>
           <option value="investor">Investor</option>
         </select>
       </label>
@@ -41,7 +54,7 @@
         Emphasis
         <select id="emphasisSelect">
           <option value="opportunities">Opportunities</option>
-          <option value="risks">Risks</option>
+          <option value="risks" selected>Risks</option>
           <option value="decisions">Decisions needed</option>
         </select>
       </label>
@@ -56,21 +69,10 @@
     </section>
 
     <section class="panel source" aria-labelledby="sourceTitle">
-      <h2 id="sourceTitle">Example Source Page</h2>
+      <h2 id="sourceTitle">Loaded Page Content</h2>
       <article id="sourceContent">
-        <h3>Hackathon Project Notes</h3>
-        <p>
-          Teams are experimenting with browser-based assistants that can turn dense documentation into
-          guided outputs. Judges care about clear user value, execution feasibility, and demo quality.
-        </p>
-        <p>
-          Current pain points include information overload, fragmented context across tabs, and poor task
-          follow-through after meetings. A successful concept should reduce reading time and improve next-step clarity.
-        </p>
-        <p>
-          Potential risks include inaccurate summaries, weak personalization, and privacy concerns around tab data.
-          Teams that show transparent controls and editable summaries are scoring higher in practice rounds.
-        </p>
+        <h3>Waiting for URL load</h3>
+        <p>Use the controls to load a Wikipedia page and generate a reconfigured view.</p>
       </article>
     </section>
 
