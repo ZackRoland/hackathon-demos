@@ -79,6 +79,12 @@ function buildOutput() {
     item.innerHTML = `<strong>${label}:</strong> ${maybeHighlightKeywords(insight)}`;
     outputList.appendChild(item);
   });
+
+  if (!ranked.length) {
+    const item = document.createElement("li");
+    item.textContent = "No extractable text found. Try another page URL.";
+    outputList.appendChild(item);
+  }
 }
 
 reconfigureBtn.addEventListener("click", buildOutput);
